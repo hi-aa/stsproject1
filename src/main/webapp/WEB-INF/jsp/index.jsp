@@ -1,4 +1,5 @@
-<%@ page contentType = "text/html;charset=utf-8" %>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="ko">
 	<jsp:include page="./layout/head.jsp"/>
@@ -27,6 +28,7 @@
 			$.ajax({
 				url: url
 				, type: 'get'
+				, dataType: 'html'
 				, success: function(res){
 					$("main").html(res);
 				}
@@ -41,7 +43,7 @@
 
 	<body>
 		<jsp:include page="./layout/header.jsp"/>
-		<nav>
+		<!-- <nav>
 			<a class="active" href="javascript:void(0);" onclick="clickMenu('/main')">Home</a>
 			<a href="javascript:void(0);" onclick="clickMenu('/news')">News</a>
 			<a href="javascript:void(0);" onclick="clickMenu('/contact')">Contact</a>
@@ -49,7 +51,7 @@
 			<a href="javascript:void(0);" class="icon" onclick="clickMenuBar();">
 				<i class="fa fa-bars"></i>
 			</a>
-		</nav>
+		</nav -->
 
 		<main>
 		</main>
