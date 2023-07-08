@@ -7,15 +7,19 @@
 
 /* Slideshow container */
 .slideshow-container {
-	max-width: 1000px;
 	position: relative;
-	margin: auto;
+	/* max-width: 1000px;
+	margin: auto; */
 }
 
 /* Hide the images by default */
 .slides {
 	display: none;
 }
+.slides img {
+	width: 100%;
+}
+
 
 /* Next & previous buttons */
 .prev, .next {
@@ -97,23 +101,36 @@
 </style>
 
 <script>
-	const slideController = {
-		setup() {
-			this.cycle = 2000;
+	$(document).ready(function() {
+		initSlide();
+
+		window.addEventListener('beforeunload', (e) => {
+			e.preventDefault();
+			slideController.stop();
+		});
+	});
+
+	var slideController = {
+		setup: function() {
+			this.cycle = 3000;
 		},
-		show(index) {
+		show: function(index) {
 			this.slideIndex = index; // 인덱스 지정
 			let slides = $(".slideshow-container .slides");
 
-			if(!this.slideIndex || this.slideIndex > slides.length - 1) {
+			if(!this.slideIndex) {
 				this.slideIndex = 0;
+			} else if(this.slideIndex > slides.length - 1) { // next
+				this.slideIndex = 0;
+			} else if(this.slideIndex < 0) { // prev
+				this.slideIndex = slides.length - 1;
 			}
 			console.info('show>> ', this.slideIndex);
 
 			slides.css("display", "none");
 			slides.eq(this.slideIndex).css("display", "block");
 		},
-		showAuto(index) {
+		showAuto: function(index) {
 			if(!index) {
 				index = 0;
 			}
@@ -124,74 +141,75 @@
 				this.show(++index);
 			}, this.cycle);
 		},
-		stop() {
+		showPrev: function() {
+			this.show(--this.slideIndex);
+		},
+		showNext: function() {
+			this.show(++this.slideIndex);
+		},
+		stop: function() {
 			console.info('stop');
 			clearInterval(this.timeoutId);
+		},
+		// 슬라이드 추가
+		appendSlide: function(src, text) {
+			// clone and append slide
+			let container = $(".slideshow-container .slide-container");
+			container.append($(".slide-template .slides").clone());
+
+			// set data
+			let appendedSlide = $(".slideshow-container .slides").last();
+			appendedSlide.find(".numbertext").text();
+			appendedSlide.find("img").attr("src", src);
+			appendedSlide.find(".text").text(text);
 		}
 	};
 
-	$(document).ready(function() {
-		slideController.setup();
-		//showSlides();
-		getSlideInfo();
-	});
-
-	/* 슬라이드 정보 얻기 */
-	function getSlideInfo() {
+	/* 메인화면 배너 생성 */
+	function initSlide() {
 		$.ajax({
 			url: '/api/getBannerList'
 			, type: 'get'
+			, data: {'bannerType' : 'MAIN'}
 			, success: function(res){
 				console.log(res);
+
+				if(res != null && res.length > 0) {
+					slideController.setup();
+
+					// 슬라이드 생성
+					res.forEach((v, i) => {
+						slideController.appendSlide(v.filePath + v.fileNm , 'caption ' + i);
+					});
+
+					// 슬라이드 시작
+					slideController.showAuto();
+				}
 			}
 		});
-	}
-
-	/* 자동 슬라이드 */
-//	function showSlides() {
-//		slideController.showAuto();
-//	}
-
-	/* 슬라이드 변경 */
-	function changeSlide(index) {
-		slideController.stop();
-		slideController.showAuto(index);
 	}
 </script>
 
 <div>
-	<!-- Slideshow container -->
 	<div class="slideshow-container">
-		<!-- Full-width images with number and caption text -->
-		<div class="slides fade">
-			<div class="numbertext">1 / 3</div>
-			<img src="/resources/img/main1.jpg" style="width: 100%">
-			<div class="text">Caption One</div>
-		</div>
+		<!-- slide 추가 영역 -->
+ 		<div class="slide-container">
 
-		<div class="slides fade">
-			<div class="numbertext">2 / 3</div>
-			<img src="/resources/img/main2.jpg" style="width: 100%">
-			<div class="text">Caption Two</div>
-		</div>
-
-		<div class="slides fade">
-			<div class="numbertext">3 / 3</div>
-			<img src="/resources/img/main3.jpg" style="width: 100%">
-			<div class="text">Caption Three</div>
-		</div>
-
-		<!-- Next and previous buttons -->
-		<a class="prev" onclick="plusSlides(-1)">&#10094;</a> <a class="next"
-			onclick="plusSlides(1)">&#10095;</a>
+ 		</div>
+		<!-- //slide 추가 영역 -->
+		<a class="prev" onclick="slideController.showPrev()">&#10094;</a>
+		<a class="next" onclick="slideController.showNext()">&#10095;</a>
 	</div>
-	<!-- //Slideshow container -->
-
-	<!-- The dots/circles -->
-	<div style="text-align: center">
-		<span class="dot" onclick="changeSlide(0)"></span>
-		<span class="dot" onclick="changeSlide(1)"></span>
-		<span class="dot" onclick="changeSlide(2)"></span>
+	<div class="slide-template" style="diplay:none;">
+		<!-- 슬라이드 추가 시 사용 -->
+		<div class="slides fade">
+			<div class="numbertext"></div>
+			<img src="">
+			<div class="text"></div>
+		</div>
 	</div>
-	<!-- //The dots/circles -->
+
+	<div class="block" style="font-size: 20px;">
+		텍스트1 텍스트2 텍스트3
+	</div>
 </div>

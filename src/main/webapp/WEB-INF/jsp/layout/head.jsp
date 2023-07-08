@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <head>
 <meta charset="utf-8">
 <title>Test Project</title>
@@ -14,18 +16,13 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-header {
-/* background-color: #dbedf8;
-	height: 80px; */
-	display: none;
-}
-
 nav {
 	overflow: hidden;
 	background-color: #333;
 	position: fixed;
 	top: 0;
-	width: 100%;
+	width: 100%; height: 47.53px;
+	z-index: 10;
 }
 nav a {
 	float: left;
@@ -74,7 +71,8 @@ nav .icon {
 }
 
 main {
-	margin-top: 50px;
+	margin: 47.53px auto 0;
+	max-width: 1000px;
 }
 
 footer {
@@ -83,6 +81,13 @@ footer {
 	width: 100%; height: 40px;
 	bottom: 0; left: 0; */
 	display: none;
+}
+
+
+.block {
+	display: block;
+	text-align: center;
+	margin: 30px 0;
 }
 </style>
 </head>

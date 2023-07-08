@@ -15,5 +15,9 @@ public class PageController {
 	public String main() {
 		return "views/main";
 	}
+	@GetMapping("/product")
+	public String product() {
+		return "views/product";
+	}
 
 }

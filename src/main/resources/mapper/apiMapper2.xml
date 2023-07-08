@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.timetable.mapper.ApiMapper2">
+	<select id="selectTestList" parameterType="String" resultType="com.project.timetable.model.TestList">
+		/* apiMapper2.selectTestList (Test List - 조회) */
+		SELECT
+			LIST_KEY
+			, LIST_TYPE
+			, LIST_TITLE
+			, LIST_CONTS
+			, USE_YN
+		FROM TB_LIST
+		WHERE USE_YN = 'Y'
+			AND LIST_TYPE = #{value}
+	</select>
+
+	<insert id="insertTest" parameterType="com.project.timetable.model.TestList">
+		/* apiMapper2.insertTest (Test List - 등록) */
+		INSERT INTO TB_LIST
+		(
+			LIST_KEY
+			, LIST_TYPE
+			, LIST_TITLE
+			, USE_YN
+		)
+		VALUES
+		(
+			#{listKey}
+			, #{listType}
+			, #{listTitle}
+			, 'Y'
+		)
+	</insert>
+</mapper>
